@@ -25,7 +25,8 @@ import java.util.*;
  * @see Employee
  * @see Customer
  */
-public class Ecommerce {
+
+ public class Ecommerce {
 	protected List<Customer> customers = new ArrayList<Customer>();
 	protected List<Wine> wines = new ArrayList<Wine>();
 	protected List<Order> ordersToBeProcessed = new ArrayList<Order>();
