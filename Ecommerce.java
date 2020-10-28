@@ -7,18 +7,18 @@ import java.util.*;
 
 //TODO: fix this javadoc lol
 /**
- * The {@code Club} class is a container class. It contains:
+ * The {@code Ecommerce} class is a container class. It contains:
  * <ul>
  * <li>{@code People} class</li>
  * <li>{@code Activity} class</li>
  * </ul>
- * In the Club class there are three {@code ArrayList}:
+ * In the Ecommerce class there are three {@code ArrayList}:
  * <ul>
- * <li>{@code customers} arraylist which contains all the people subscribed and the admins of the sport club </li>
- * <li>{@code lessons} arraylist which contains all the lessons activated by the sport club</li>
- * <li>{@code races} arraylist which contains all the races planned by the sport club</li>
+ * <li>{@code customers} arraylist which contains all the people subscribed and the admins of the sport ecommerce </li>
+ * <li>{@code wines} arraylist which contains all the wines activated by the sport ecommerce</li>
+ * <li>{@code races} arraylist which contains all the races planned by the sport ecommerce</li>
  * </ul>
- * This class acts as an abstraction of a sport club.
+ * This class acts as an abstraction of a sport ecommerce.
  * @see ArrayList
  * @see Wine
  * @see Order
@@ -60,7 +60,6 @@ import java.util.*;
 		 * @param name name of the new user [String]
 		 * @param sur surname(lastname) of the new user [String]
 		 * @param email email of the new user [String]
-		 * @param passwd password of the new user [String]
 		 */
 		protected People(final String name, final String sur, final String email) {
 			this.name = name;
@@ -72,10 +71,10 @@ import java.util.*;
     
     /**
 	 * The {@code User} class is a container class. 
-	 * It contains all the people subscribed and the admins of the sport club.
-	 * It is a subclass of {@code People} and it is extended by the class {@code Admin}.
+	 * It contains all the people subscribed and the employees of the sport ecommerce.
+	 * It is a subclass of {@code People} and it is extended by the class {@code Employee}.
 	 * @see People
-	 * @see Admin
+	 * @see Employee
 	 */
 	public class Customer extends People {
 		private ArrayList<Wine> cart = new ArrayList<Wine>();
@@ -180,32 +179,32 @@ import java.util.*;
     }
 
     /**
-	 * The {@code Admin} class is an extension of class {@code User}.
-	 * An admin can access all the methods contained in {@code User},
+	 * The {@code Employee} class is an extension of class {@code Customer}.
+	 * An employee can access all the methods contained in {@code Customer},
 	 * but it also has the priviledge to operate on the ArrayLists
-	 * contained in {@code Club}.
-	 * @see User
+	 * contained in {@code Ecommerce}.
+	 * @see Customer
 	 * @see People
 	 * @see ArrayList
-	 * @see Club
+	 * @see Ecommerce
 	 */
 	public class Employee extends Customer {
 		
 		/**
-		 * {@code Admin} Class constructor. Admin extends class {@code User}.
-		 * @see User
+		 * {@code Employee} Class constructor. Employee extends class {@code Customer}.
+		 * @see Customer
 		 */
 		public Employee() {
 			super();
 		}
 		
 		/**
-		 * {@code Admin} Class constructor. Admin extends class {@code User}.
+		 * {@code Employee} Class constructor. Employee extends class {@code Customer}.
 		 * 
-		 * @param name name of the new admin [String]
-		 * @param sur surname(last name) of the new admin [String]
-		 * @param email email of the new admin [String]
-		 * @see User
+		 * @param name name of the new employee [String]
+		 * @param sur surname(last name) of the new employee [String]
+		 * @param email email of the new employee [String]
+		 * @see Customer
 		 */
 		public Employee(final String name, final String sur, final String email) {
 			super(name, sur, email);
