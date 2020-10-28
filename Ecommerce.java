@@ -14,7 +14,7 @@ import java.util.*;
  * </ul>
  * In the Club class there are three {@code ArrayList}:
  * <ul>
- * <li>{@code users} arraylist which contains all the people subscribed and the admins of the sport club </li>
+ * <li>{@code customers} arraylist which contains all the people subscribed and the admins of the sport club </li>
  * <li>{@code lessons} arraylist which contains all the lessons activated by the sport club</li>
  * <li>{@code races} arraylist which contains all the races planned by the sport club</li>
  * </ul>
@@ -26,8 +26,10 @@ import java.util.*;
  * @see Customer
  */
 public class Ecommerce {
-	protected List<Customer> users = new ArrayList<Customer>();
+	protected List<Customer> customers = new ArrayList<Customer>();
 	protected List<Wine> wines = new ArrayList<Wine>();
+	protected List<Order> ordersToBeProcessed = new ArrayList<Order>();
+
     /**
 	 * Class {@code People} is a class that should never be instantiated.
 	 * This class is used as a container for Class {@code Customer} and
@@ -75,13 +77,17 @@ public class Ecommerce {
 	 * @see Admin
 	 */
 	public class Customer extends People {
-
+		private ArrayList<Wine> cart = new ArrayList<Wine>();
+		private ArrayList<Order> orders = new ArrayList<Order>();
+		//TODO: authentication method
+		
 		/**
 		 * {@code User} Class Constructor. User is an extension of class {@code People}.
 		 * @see People
 		 */
 		public Customer() {
 			super();
+
 		}
 
 		/**
@@ -96,7 +102,7 @@ public class Ecommerce {
 		}
 
 		/**
-		 * Gets the name of the {@code User}.
+		 * Gets the name of the {@code Customer}.
 		 * @return The name of the user [String].
 		 * @see Customer
 		 */
@@ -105,7 +111,7 @@ public class Ecommerce {
 		}
 
 		/**
-		 * Gets the surname (last name) of the {@code User}.
+		 * Gets the surname (last name) of the {@code Customer}.
 		 * @return The surname of the user [String].
 		 * @see Customer
 		 */
@@ -114,13 +120,62 @@ public class Ecommerce {
 		}
 
 		/**
-		 * Gets the email of the {@code User}.
+		 * Gets the email of the {@code Customer}.
 		 * @return The email of the user [String].
 		 * @see Customer
 		 */
 		public String getEmail() {
 			return this.email;
-        }
+		}
+		
+		public void searchByYear(short year){
+			for (Wine wine : wines){
+				if(wine.getYear() == year){
+					wine.printInfo();
+				}
+			}
+		}
+		
+		public void searchByName(String name){
+			for (Wine wine : wines){
+				if(wine.getName() == name){
+					wine.printInfo();
+				}
+			}
+		}
+		
+		public void addToCart(Wine wine, short quantity){
+			if(quantity > 0){
+				Wine wine_tmp = new Wine(wine.getName(),
+				wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
+				if (wine.getQuantity() < quantity){
+					System.out.println("Warning - The selected quantity is unavailable");
+				}
+				this.cart.add(wine_tmp);
+			}
+		}
+
+		public void removeFromCart(Wine wine){
+			this.cart.remove(wine);
+		} 
+		
+		public void buy(){
+			Boolean flag = false;
+
+			for(Wine wine_toBuy : cart){
+				for(Wine wine_inStock : wines){
+
+					if( (wine_toBuy.getName() == wine_inStock.getName()) && 
+					(wine_toBuy.getQuantity() > wine_inStock.getQuantity()) ){
+						flag = !flag;
+						System.out.format("Wine %s is currently not available in the selected quantity.");
+					}
+				}
+			}
+
+			Order order = new Order(this.cart);
+			this.orders.add(order);
+		}
     }
 
     /**
@@ -157,8 +212,9 @@ public class Ecommerce {
     }
 
 	public class Order {
-		private List<Wine> items = new ArrayList<Wine>();
-
+		private ArrayList<Wine> items = new ArrayList<Wine>();
+		private long id;
+		
 
 		public Order(final List<Wine> wines){
 			for (Wine wine : wines){
@@ -167,6 +223,8 @@ public class Ecommerce {
 		}
 	}
 
+	
+
 	//TODO: javadoc
 	public class Wine {
 
@@ -174,7 +232,7 @@ public class Ecommerce {
 		private String producer; //not really a great name tho.
 		private short year;
 		private String notes;
-		private List<String> grapewines = new ArrayList<String>();
+		private ArrayList<String> grapewines = new ArrayList<String>();
 		private int quantity;
 
 		public Wine(){
@@ -185,27 +243,72 @@ public class Ecommerce {
 			this.quantity=-1;
 		}
 
-		public Wine(final String name, final String producer, final short year, final String notes, final List<String> grapes){
+		public Wine(final String name, final String producer, final short year,
+		 final String notes, final int quantity, final List<String> grapes){
 			this.name = name;
 			this.producer = producer;
 			this.year = year;
 			this.notes = notes;
+			this.quantity = quantity;
 
 			for (String grape : grapes){
 				grapewines.add(grape);
 			}
 		}
 
+		public String getName(){
+			return this.name;
+		}
+
+		public String getProducer(){
+			return this.producer;
+		}
+
+		public short getYear(){
+			return this.year;
+		}
+		
+		public String getNotes(){
+			return this.notes;
+		}
+
+		public int getQuantity(){
+			return this.quantity;
+		}
+
+		public ArrayList<String> getGrapewines(){
+			return this.grapewines;
+		}
+
 		public void restock(int quantity){
 			this.quantity += quantity;
 		}
+
 		public void withdraw(int quantity){
 			this.quantity -= quantity;
-			
+		}
+
+
+		public void printInfo(){
+			System.out.println(new StringBuilder("Name: ").append(this.name)
+			.append("\nYear: ").append(this.year)
+			.append("\nProducer: ").append(this.producer)
+			.append("\nNotes: ").append(this.notes)
+			.append("\nQuantity: ").append(this.quantity)
+			.append("\nGrapewines:"));
+
+			for (String grape : this.grapewines){
+				System.out.format("\n-%s", grape);
+			}
 		}
 	}
 	
-	public static void main(String argv[]){
+	public void register(final String name, final String surname, final String mail ) {
+		Customer new_cust = new Customer(name, surname, mail);
+		customers.add(new_cust);
+	}
+
+	public static void main(String argv[]) {
 		Ecommerce ecc = new Ecommerce();
 		ecc.true_main();
 	}
