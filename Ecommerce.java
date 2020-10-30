@@ -33,6 +33,7 @@ import java.util.*;
  public class Ecommerce {
 
 	protected List<Customer> customers = new ArrayList<Customer>();
+	protected List<Employee> employees = new ArrayList<Employee>();
 	protected List<Wine> wines = new ArrayList<Wine>();
 	protected List<Order> ordersToBeProcessed = new ArrayList<Order>();
 
@@ -91,7 +92,6 @@ import java.util.*;
 		protected ArrayList<Wine> cart = new ArrayList<Wine>();
 		protected ArrayList<Order> orders = new ArrayList<Order>();
 		
-		//TODO: authentication method
 		
 		/**
 		 * {@code Customer} class constructor. Customer is an extension of class {@code People}.
@@ -142,10 +142,10 @@ import java.util.*;
 		/**
 		 * prints all the informations regarding all 
 		 * the wines produced in the provided year.
-		 * @param year the year of production of the {@code Wine} we are searching. [short]
+		 * @param year the year of production of the {@code Wine} we are searching. [int]
 		 * @see Wine
 		 */
-		public void searchByYear(short year){
+		public void searchByYear(int year){
 			for (Wine wine : wines){
 				if(wine.getYear() == year){
 					wine.printInfo();
@@ -171,10 +171,10 @@ import java.util.*;
 		 * prints all the informations regarding all
 		 * the wines with the provided name and year.
 		 * @param name the name of the {@code Wine} we are searching. [String]
-		 * @param year the year of production of the {@code Wine} we are searching. [short]
+		 * @param year the year of production of the {@code Wine} we are searching. [int]
 		 * @see Wine
 		 */
-		public void searchByNameAndYear(String name, short year){
+		public void searchByNameAndYear(String name, int year){
 			for (Wine wine : wines){
 				if(wine.getName() == name && wine.getYear() == year){
 					wine.printInfo();
@@ -186,10 +186,10 @@ import java.util.*;
 		 * adds to {@code cart} a selected {@code Wine} with the selected quantity.
 		 * Warns the {@code Customer} in case the desired quantity is unavailable.  
 		 * @param wine the wine the customer wants to buy. [Wine]
-		 * @param quantity the quantity of the selected {@code Wine}. [short]
+		 * @param quantity the quantity of the selected {@code Wine}. [int]
 		 * @see Wine
 		 */
-		public void addToCart(Wine wine, short quantity){
+		public void addToCart(Wine wine, int quantity){
 			if(quantity > 0){
 				Wine wine_tmp = new Wine(wine.getName(),
 				wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
@@ -267,7 +267,22 @@ import java.util.*;
 		 */
 		public Employee(final String name, final String sur, final String email) {
 			super(name, sur, email);
-        }
+		}
+		
+		//TODO: javadoc
+		public void addWine(final String name, final String producer, final int year,
+		final String notes, final int quantity, final List<String> grapes){
+			Wine wine = new Wine(name, producer, year, notes, quantity, grapes);
+			wines.add(wine);
+		}
+
+		public void restockWine(Wine wine, int quantity){
+			wine.addQuantity(quantity);
+		}
+
+		public void withdrawWine(Wine wine, int quantity){
+			wine.subtractQuantity(quantity);
+		}
     }
 
 	//TODO: finish all these javadocs
@@ -279,13 +294,12 @@ import java.util.*;
 
 		//TODO: we need to find a way to have a unique id for every order
 		private ArrayList<Wine> items = new ArrayList<Wine>();
-		private long id;
+		private int id;
 
 		/**
 		 * 
 		 */
-		public Order() {
-			++this.id;
+		public Order(){
 		}
 
 		/**
@@ -293,7 +307,6 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public Order(final List<Wine> wines){
-			this.id++;
 			for (Wine wine : wines){
 				this.items.add(wine);
 			}
@@ -302,9 +315,9 @@ import java.util.*;
 		
 		/**
 		 * Gets the id of the selected {@code Order}.
-		 * @return the id of the {@code Order}. [long]
+		 * @return the id of the {@code Order}. [int]
 		 */
-		public long getId() {
+		public int getId() {
 			return this.id;
 		}
 	}
@@ -317,7 +330,7 @@ import java.util.*;
 
 		private String name;
 		private String producer;
-		private short year;
+		private int year;
 		private String notes;
 		private ArrayList<String> grapewines = new ArrayList<String>();
 		private int quantity;
@@ -337,12 +350,12 @@ import java.util.*;
 		 * 
 		 * @param name name of the wine. [String]
 		 * @param producer producer of the wine. [String]
-		 * @param year year of production of the wine. [short]
+		 * @param year year of production of the wine. [int]
 		 * @param notes notes for the wine. [String] 
 		 * @param quantity quantity of the wine. [int]
 		 * @param grapes list of the grapes. [List of Strings]
 		 */
-		public Wine(final String name, final String producer, final short year,
+		public Wine(final String name, final String producer, final int year,
 		 final String notes, final int quantity, final List<String> grapes){
 
 			this.name = name;
@@ -376,7 +389,7 @@ import java.util.*;
 		 * Gets the name of the {@code Wine}.
 		 * @return the name of the {@code Wine}. [String]
 		 */
-		public short getYear(){
+		public int getYear(){
 			return this.year;
 		}
 		
@@ -405,11 +418,11 @@ import java.util.*;
 		}
 
 		//? these methods should be used by the employee, we should move them
-		public void restock(int quantity){
+		public void addQuantity(int quantity){
 			this.quantity += quantity;
 		}
 
-		public void withdraw(int quantity){
+		public void subtractQuantity(int quantity){
 			this.quantity -= quantity;
 		}
 
@@ -438,9 +451,21 @@ import java.util.*;
 	 * @param surname
 	 * @param mail
 	 */
-	public void register(final String name, final String surname, final String mail) {
+	public void register_customer(final String name, final String surname, final String mail) {
 		Customer new_cust = new Customer(name, surname, mail);
 		customers.add(new_cust);
+	}
+	//TODO: javadoc
+	/**
+	 * 
+	 * @param name
+	 * @param surname
+	 * @param mail
+	 */
+	public void register_employee(final String name, final String surname, final String mail) {
+		Employee new_emp = new Employee(name, surname, mail);
+		customers.add(new_emp);
+		employees.add(new_emp);
 	}
 
 	//TODO: javadoc
@@ -467,5 +492,39 @@ import java.util.*;
 	}
 	
 	public void true_main(Ecommerce ecc){
+		
+		ecc.register_customer("Mario", "Verdi", "mario.verdi@gmail.com");
+		ecc.register_customer("Giovanni", "Venti", "gio20@gmail.com");
+		ecc.register_customer("Francesco", "Franceschini", "francifrance99@hotmail.com");
+		
+		ecc.register_employee("Massimiliano", "De Santis", "maxdesa@libero.it");
+		Employee emp = ecc.employees.get(0);
+		ArrayList<String>test_grapes = new ArrayList<>();
+		test_grapes.add("1");
+		test_grapes.add("2");
+		
+		emp.addWine("Soave Doc", "Vivaldi", 2019, 
+		"Bianco, profumo floreale", 456, test_grapes);
+
+		emp.addWine("Chianti", "Carpineto", 2015, 
+		"Rosso", 6, test_grapes);
+
+		Customer cust0 = ecc.customers.get(0);
+		auth(cust0, "mario.verdi@gmail.com");
+		cust0.addToCart(ecc.wines.get(0), 10);
+		cust0.buy();
+		
+		Customer cust1 = ecc.customers.get(1);
+		auth(cust1, "gio20@gmail.com");
+		cust0.addToCart(ecc.wines.get(1), 6);
+		cust0.buy();
+
+		//TODO: notification system
+		Customer cust2 = ecc.customers.get(1);
+		auth(cust2, "francifrance99@hotmail.com");
+		cust0.addToCart(ecc.wines.get(1), 18);
+		cust0.buy();
+
+		emp.restockWine(ecc.wines.get(1), 500);
 	}
 }
