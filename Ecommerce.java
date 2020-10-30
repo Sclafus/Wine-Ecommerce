@@ -5,7 +5,6 @@ Ingegneria del Software*/
 
 import java.util.*;
 
-
 /**
  * The {@code Ecommerce} class is a container class. It contains:
  * <ul>
@@ -50,6 +49,7 @@ import java.util.*;
 		protected String name;
 		protected String surname;
 		protected String email;
+		protected Boolean authenticated;
 
 		/**
 		 * {@code People} Class constructor. This constructor should NEVER
@@ -59,6 +59,7 @@ import java.util.*;
 			this.name = "";
 			this.surname = "";
 			this.email = "";
+			this.authenticated = false;
 		}
 
 		/**
@@ -72,6 +73,7 @@ import java.util.*;
 			this.name = name;
 			this.surname = sur;
 			this.email = email;
+			this.authenticated = false;
 		}
 
     }
@@ -88,6 +90,7 @@ import java.util.*;
 	public class Customer extends People {
 		protected ArrayList<Wine> cart = new ArrayList<Wine>();
 		protected ArrayList<Order> orders = new ArrayList<Order>();
+		
 		//TODO: authentication method
 		
 		/**
@@ -165,6 +168,21 @@ import java.util.*;
 		}
 		
 		/**
+		 * prints all the informations regarding all
+		 * the wines with the provided name and year.
+		 * @param name the name of the {@code Wine} we are searching. [String]
+		 * @param year the year of production of the {@code Wine} we are searching. [short]
+		 * @see Wine
+		 */
+		public void searchByNameAndYear(String name, short year){
+			for (Wine wine : wines){
+				if(wine.getName() == name && wine.getYear() == year){
+					wine.printInfo();
+				}
+			}
+		}
+		
+		/**
 		 * adds to {@code cart} a selected {@code Wine} with the selected quantity.
 		 * Warns the {@code Customer} in case the desired quantity is unavailable.  
 		 * @param wine the wine the customer wants to buy. [Wine]
@@ -189,24 +207,35 @@ import java.util.*;
 		public void removeFromCart(Wine wine){
 			this.cart.remove(wine);
 		} 
+
+		public boolean isAuth(){
+			return this.authenticated;
+		}
+
+		public void toggleAuth(){
+			this.authenticated = !this.authenticated;
+		}
 		
 		//TODO: discuss this
 		public void buy(){
-			Boolean flag = false;
 
-			for(Wine wine_toBuy : cart){
-				for(Wine wine_inStock : wines){
+			if(this.isAuth()){
 
-					if( (wine_toBuy.getName() == wine_inStock.getName()) && 
-					(wine_toBuy.getQuantity() > wine_inStock.getQuantity()) ){
-						flag = !flag;
-						System.out.format("Wine %s is currently not available in the selected quantity.");
+				for(Wine wine_toBuy : cart){
+					for(Wine wine_inStock : wines){
+	
+						if( (wine_toBuy.getName() == wine_inStock.getName()) && 
+						(wine_toBuy.getQuantity() > wine_inStock.getQuantity()) ){
+							System.out.format("Wine %s is currently not available in the selected quantity.");
+						}
 					}
 				}
+	
+				Order order = new Order(this.cart);
+				this.orders.add(order);
+			} else {
+				System.out.println("You are not authenticated, please authenticate before buying.");
 			}
-
-			Order order = new Order(this.cart);
-			this.orders.add(order);
 		}
     }
 
@@ -402,16 +431,41 @@ import java.util.*;
 		}
 	}
 	
-	public void register(final String name, final String surname, final String mail ) {
+	//TODO: javadoc
+	/**
+	 * 
+	 * @param name
+	 * @param surname
+	 * @param mail
+	 */
+	public void register(final String name, final String surname, final String mail) {
 		Customer new_cust = new Customer(name, surname, mail);
 		customers.add(new_cust);
 	}
 
+	//TODO: javadoc
+	/**
+	 * 
+	 * @param cust
+	 * @param email
+	 */
+	public void auth(Customer cust, String email){
+
+		if(cust.getEmail() == email && !cust.isAuth()){
+			cust.toggleAuth();
+		} else if(cust.getEmail() == email && cust.isAuth()){
+			System.out.println("You are already authenticated.");
+		} else {
+			System.out.println("The provided email is invalid.");
+		}
+
+	}
+
 	public static void main(String argv[]) {
 		Ecommerce ecc = new Ecommerce();
-		ecc.true_main();
+		ecc.true_main(ecc);
 	}
 	
-	public void true_main(){
+	public void true_main(Ecommerce ecc){
 	}
 }
