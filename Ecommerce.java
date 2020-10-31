@@ -318,7 +318,6 @@ import java.util.*;
 		}
     }
 
-	//TODO: finish all these javadocs
 	/**
 	 * The {@code Order} class is pretty straight forward. Every order has
 	 * a list of wines that has an ArrayList of wines and a unique id.
@@ -329,15 +328,17 @@ import java.util.*;
 		private static int id;
 
 		/**
-		 * 
+		 * {@code Order} class constructor.
 		 */
 		public Order(){
 			++Ecommerce.Order.id; 
 		}
 
 		/**
-		 * @param wines [Array Wine]
+		 * {@code Order} class constructor.
+		 * @param wines the wines the {@code Customer} wants to buy. [Wine Array]
 		 * @see Wine
+		 * @see Customer
 		 */
 		public Order(final Wine[] wines){
 			Collections.addAll(items, wines);
@@ -353,6 +354,11 @@ import java.util.*;
 			return Ecommerce.Order.id;
 		}
 
+		/**
+		 * Gets the wines from the selected {@code Order}.
+		 * @return the wines of the {@code Order}. [Wine Array]
+		 * @see Wine
+		 */
 		public Wine[] getWines(){
 			Wine[] wines_arr = new Wine[items.size()]; 
 			wines_arr = items.toArray(wines_arr);
@@ -374,7 +380,7 @@ import java.util.*;
 		private int quantity;
 
 		/**
-		 * 
+		 * {@code Wine} class constructor.
 		 */
 		public Wine(){
 			this.name = "";
@@ -385,7 +391,7 @@ import java.util.*;
 		}
 
 		/**
-		 * 
+		 * {@code Wine} class constructor.
 		 * @param name name of the wine. [String]
 		 * @param producer producer of the wine. [String]
 		 * @param year year of production of the wine. [int]
@@ -446,7 +452,7 @@ import java.util.*;
 
 		/**
 		 * Gets the list of grapewines of the {@code Wine}.
-		 * @return the list of grapewines of the {@code Wine}. [ArrayList of Strings]
+		 * @return the list of grapewines of the {@code Wine}. [String Array]
 		 */
 		public String[] getGrapewines(){
 			String[] grapes = new String[grapewines.size()];
@@ -454,7 +460,6 @@ import java.util.*;
 			return grapes;
 		}
 
-		//? these methods should be used by the employee, we should move them
 		public void addQuantity(int quantity){
 			this.quantity += quantity;
 		}
