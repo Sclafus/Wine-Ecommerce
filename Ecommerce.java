@@ -2,9 +2,7 @@
 Alessandro Sclafani 298779 & 
 Martina Caffagnini 294520 for 
 Ingegneria del Software*/
-
 import java.util.*;
-
 /**
  * The {@code Ecommerce} class is a container class. It contains:
  * <ul>
@@ -216,22 +214,36 @@ import java.util.*;
 			this.authenticated = !this.authenticated;
 		}
 		
-		//TODO: discuss this
+		//TODO: finish this method
+		//TODO:also fix the javadoc language lmao notification squad
+
+		/**
+		 * Buys everything that has been added from the cart. 
+		 * If the quantity in the cart is greater than the one in stock,
+		 * the customer will be automatically added to the notification 
+		 * squad for the wine in question.
+		 */
 		public void buy(){
 
 			if(this.isAuth()){
-
 				for(Wine wine_toBuy : cart){
 					for(Wine wine_inStock : wines){
-	
-						if( (wine_toBuy.getName() == wine_inStock.getName()) && 
-						(wine_toBuy.getQuantity() > wine_inStock.getQuantity()) ){
-							System.out.format("Wine %s is currently not available in the selected quantity.");
+
+						if((wine_toBuy.getName() == wine_inStock.getName())){
+							if (wine_toBuy.getQuantity() > wine_inStock.getQuantity()){
+								//TODO:add the notification system
+								System.out.format("Wine %s is currently not available in the selected quantity.");	
+							} else {
+								wine_inStock.subtractQuantity(wine_toBuy.getQuantity());
+							}
 						}
 					}
 				}
-	
-				Order order = new Order(this.cart);
+
+				Wine[] new_cart = new Wine[cart.size()];
+				Order order = new Order(new_cart);
+
+				ordersToBeProcessed.add(order);
 				this.orders.add(order);
 			} else {
 				System.out.println("You are not authenticated, please authenticate before buying.");
@@ -269,17 +281,38 @@ import java.util.*;
 			super(name, sur, email);
 		}
 		
-		//TODO: javadoc
+		/**
+		 * Adds a new {@code Wine} in the {@code wines} list.
+		 * @param name name of the {@code Wine}. [String]
+		 * @param producer producer of the {@code Wine}. [String]
+		 * @param year year of production of the {@code Wine}. [int]
+		 * @param notes notes for the the {@code Wine}. [String]
+		 * @param quantity quantity of the {@code Wine}. [int]
+		 * @param grapes the grapes used for the {@code Wine}. [String Array]
+		 * @see Wine
+		 */
 		public void addWine(final String name, final String producer, final int year,
-		final String notes, final int quantity, final List<String> grapes){
+		final String notes, final int quantity, final String[] grapes){
 			Wine wine = new Wine(name, producer, year, notes, quantity, grapes);
 			wines.add(wine);
 		}
 
+		/**
+		 * Restocks the storage of the selected {@code Wine} with the specified quantity. 
+		 * @param wine the {@code Wine} that has to be restocked. [Wine]
+		 * @param quantity the quantity to restock. [int]
+		 * @see Wine
+		 */
 		public void restockWine(Wine wine, int quantity){
 			wine.addQuantity(quantity);
 		}
 
+		/**
+		 * Withdraws the selected quantity of {@code Wine} from the storage.
+		 * @param wine the {@code Wine} that has to be restocked. [Wine]
+		 * @param quantity the quantity to restock. [int]
+		 * @see Wine
+		 */
 		public void withdrawWine(Wine wine, int quantity){
 			wine.subtractQuantity(quantity);
 		}
@@ -288,28 +321,27 @@ import java.util.*;
 	//TODO: finish all these javadocs
 	/**
 	 * The {@code Order} class is pretty straight forward. Every order has
-	 * a list of wines that have been 
+	 * a list of wines that has an ArrayList of wines and a unique id.
 	 */
-	public class Order {
+	public static class Order {
 
-		//TODO: we need to find a way to have a unique id for every order
 		private ArrayList<Wine> items = new ArrayList<Wine>();
-		private int id;
+		private static int id;
 
 		/**
 		 * 
 		 */
 		public Order(){
+			++Ecommerce.Order.id; 
 		}
 
 		/**
-		 * @param wines List of {@code Wine}s
+		 * @param wines [Array Wine]
 		 * @see Wine
 		 */
-		public Order(final List<Wine> wines){
-			for (Wine wine : wines){
-				this.items.add(wine);
-			}
+		public Order(final Wine[] wines){
+			Collections.addAll(items, wines);
+			++Ecommerce.Order.id;
 		}
 
 		
@@ -318,7 +350,13 @@ import java.util.*;
 		 * @return the id of the {@code Order}. [int]
 		 */
 		public int getId() {
-			return this.id;
+			return Ecommerce.Order.id;
+		}
+
+		public Wine[] getWines(){
+			Wine[] wines_arr = new Wine[items.size()]; 
+			wines_arr = items.toArray(wines_arr);
+			return wines_arr;
 		}
 	}
 
@@ -353,20 +391,17 @@ import java.util.*;
 		 * @param year year of production of the wine. [int]
 		 * @param notes notes for the wine. [String] 
 		 * @param quantity quantity of the wine. [int]
-		 * @param grapes list of the grapes. [List of Strings]
+		 * @param grapes list of the grapes. [String array]
 		 */
 		public Wine(final String name, final String producer, final int year,
-		 final String notes, final int quantity, final List<String> grapes){
+		 final String notes, final int quantity, final String[] grapes){
 
 			this.name = name;
 			this.producer = producer;
 			this.year = year;
 			this.notes = notes;
 			this.quantity = quantity;
-
-			for (String grape : grapes){
-				grapewines.add(grape);
-			}
+			Collections.addAll(this.grapewines, grapes);
 		}
 
 		/**
@@ -413,8 +448,10 @@ import java.util.*;
 		 * Gets the list of grapewines of the {@code Wine}.
 		 * @return the list of grapewines of the {@code Wine}. [ArrayList of Strings]
 		 */
-		public ArrayList<String> getGrapewines(){
-			return this.grapewines;
+		public String[] getGrapewines(){
+			String[] grapes = new String[grapewines.size()];
+			grapes = grapewines.toArray(grapes);
+			return grapes;
 		}
 
 		//? these methods should be used by the employee, we should move them
@@ -444,23 +481,24 @@ import java.util.*;
 		}
 	}
 	
-	//TODO: javadoc
 	/**
-	 * 
-	 * @param name
-	 * @param surname
-	 * @param mail
+	 * Adds a new {@code Customer} to {@code customers} list.
+	 * @param name the name of the new {@code Customer}. [String]
+	 * @param surname the surname of the new {@code Customer}. [String]
+	 * @param mail the email of the new {@code Customer}. [String]
+	 * @see Customer
 	 */
 	public void register_customer(final String name, final String surname, final String mail) {
 		Customer new_cust = new Customer(name, surname, mail);
 		customers.add(new_cust);
 	}
-	//TODO: javadoc
+
 	/**
-	 * 
-	 * @param name
-	 * @param surname
-	 * @param mail
+	 * Adds a new {@code Employee} to {@code employees} list.
+	 * @param name the name of the new {@code Employee}. [String]
+	 * @param surname the surname of the new {@code Employee}. [String]
+	 * @param mail the email of the new {@code Employee}. [String]
+	 * @see Employee
 	 */
 	public void register_employee(final String name, final String surname, final String mail) {
 		Employee new_emp = new Employee(name, surname, mail);
@@ -468,11 +506,15 @@ import java.util.*;
 		employees.add(new_emp);
 	}
 
-	//TODO: javadoc
 	/**
-	 * 
-	 * @param cust
-	 * @param email
+	 * Authenticates the provided customer.
+	 * It uses a really bad method for authentication: it only requires
+	 * the email of the customer. This is really bad for security
+	 * reasons, but since we don't have a password field, this is the
+	 * only workaround we can use. 
+	 * @param cust the customer we want to authenticate. [Customer]
+	 * @param email the email of the customer we want to check. [String]
+	 * @see Customer
 	 */
 	public void auth(Customer cust, String email){
 
@@ -499,15 +541,14 @@ import java.util.*;
 		
 		ecc.register_employee("Massimiliano", "De Santis", "maxdesa@libero.it");
 		Employee emp = ecc.employees.get(0);
-		ArrayList<String>test_grapes = new ArrayList<>();
-		test_grapes.add("1");
-		test_grapes.add("2");
 		
+		String[] grapes = {"grape1", "grape2"};
+
 		emp.addWine("Soave Doc", "Vivaldi", 2019, 
-		"Bianco, profumo floreale", 456, test_grapes);
+		"Bianco, profumo floreale", 456, grapes);
 
 		emp.addWine("Chianti", "Carpineto", 2015, 
-		"Rosso", 6, test_grapes);
+		"Rosso", 6, grapes);
 
 		Customer cust0 = ecc.customers.get(0);
 		auth(cust0, "mario.verdi@gmail.com");
@@ -519,7 +560,7 @@ import java.util.*;
 		cust0.addToCart(ecc.wines.get(1), 6);
 		cust0.buy();
 
-		//TODO: notification system
+		// //TODO: notification system
 		Customer cust2 = ecc.customers.get(1);
 		auth(cust2, "francifrance99@hotmail.com");
 		cust0.addToCart(ecc.wines.get(1), 18);
