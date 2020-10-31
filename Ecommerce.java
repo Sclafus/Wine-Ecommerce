@@ -215,7 +215,7 @@ import java.util.*;
 		}
 		
 		//TODO: finish this method
-		//TODO:also fix the javadoc language lmao notification squad
+		//TODO: also fix the javadoc language lmao notification squad
 
 		/**
 		 * Buys everything that has been added from the cart. 
@@ -231,7 +231,7 @@ import java.util.*;
 
 						if((wine_toBuy.getName() == wine_inStock.getName())){
 							if (wine_toBuy.getQuantity() > wine_inStock.getQuantity()){
-								//TODO:add the notification system
+								//TODO: add the notification system
 								System.out.format("Wine %s is currently not available in the selected quantity.");	
 							} else {
 								wine_inStock.subtractQuantity(wine_toBuy.getQuantity());
@@ -366,7 +366,7 @@ import java.util.*;
 		}
 	}
 
-	//TODO: javadoc for the class and missing methods.
+	//TODO: class javadoc 
 	/**
 	 * 
 	 */
@@ -460,17 +460,25 @@ import java.util.*;
 			return grapes;
 		}
 
+		/**
+		 * Adds the specified quantity to the selected {@code Wine}.
+		 * @param quantity the quantity to add. [int]
+		 */
 		public void addQuantity(int quantity){
 			this.quantity += quantity;
 		}
 
+		/**	
+		 * Substracts the specified quantity to the selected {@code Wine}.
+		 * @param quantity the quantity to subtract. [int]
+		 */
 		public void subtractQuantity(int quantity){
 			this.quantity -= quantity;
 		}
 
 
 		/**
-		 * Prints in console the relevant informations of the {@code Wine}.
+		 * Prints in console the relevant informations of the selected {@code Wine}.
 		 */
 		public void printInfo(){
 			System.out.println(new StringBuilder("Name: ").append(this.name)
