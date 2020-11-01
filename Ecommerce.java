@@ -166,7 +166,7 @@ import java.util.*;
 		}
 		
 		/**
-		 * prints all the informations regarding all
+		 * Prints all the informations regarding all
 		 * the wines with the provided name and year.
 		 * @param name the name of the {@code Wine} we are searching. [String]
 		 * @param year the year of production of the {@code Wine} we are searching. [int]
@@ -200,7 +200,8 @@ import java.util.*;
 
 		/**
 		 * Removes the selected wine from the {@code cart}.
-		 * @param wine the wine the customer wants to remove from the {@code cart}. [Wine] 
+		 * @param wine the wine the customer wants to remove from the {@code cart}. [Wine]
+		 * @see Wine
 		 */
 		public void removeFromCart(Wine wine){
 			this.cart.remove(wine);
