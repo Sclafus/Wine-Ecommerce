@@ -335,12 +335,14 @@ import java.util.*;
 
 		/**
 		 * Ships all the Wines in the specified {@code Order}.
-		 * WARNING! If the 
-		 * @param order
+		 * If the wine in stock is not enough for the selected order, 
+		 * the employee must contact the {@code Customer} manually.
+		 * @param order the selected order. [Order]
 		 * @see Order
 		 * @see Wine
 		 */
 		public void ship(Order order){
+			int counter = 0;
 			for(Wine wine_toShip : order.getWines()){
 				for(Wine wine_inStock : wines){
 
@@ -349,9 +351,13 @@ import java.util.*;
 							System.out.format("There is not enough %s! Contact the customer.", wine_toShip.getName());
 						} else {
 							wine_inStock.subtractQuantity(wine_toShip.getQuantity());
+							counter++;
 						}
 					}
 				}
+			}
+			if (counter == order.getWines().length){
+				ordersToBeProcessed.remove(order);
 			}
 		}
     }
