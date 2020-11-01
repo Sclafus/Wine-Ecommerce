@@ -226,7 +226,6 @@ import java.util.*;
 			this.authenticated = !this.authenticated;
 		}
 		
-		//TODO: finish this method
 		//TODO: also fix the javadoc language lmao notification squad
 
 		/**
@@ -242,21 +241,26 @@ import java.util.*;
 					for(Wine wine_inStock : wines){
 
 						if((wine_toBuy.getName() == wine_inStock.getName())){
+
 							if (wine_toBuy.getQuantity() > wine_inStock.getQuantity()){
-								//TODO: add the notification system
-								System.out.format("Wine %s is currently not available in the selected quantity.");	
-							} else {
-								wine_inStock.subtractQuantity(wine_toBuy.getQuantity());
+
+								System.out.println(new StringBuilder("Wine ").append(wine_inStock.getName())
+								.append("is currently not available in the selected quantity.")
+								.append("You will be notified when we will restock our storage!"));
+								wine_inStock.addToNotifications(this);
+								cart.remove(wine_toBuy);
+
 							}
 						}
 					}
 				}
-
 				Wine[] new_cart = new Wine[cart.size()];
+				new_cart = cart.toArray(new_cart);
 				Order order = new Order(new_cart);
-
 				ordersToBeProcessed.add(order);
 				this.orders.add(order);
+				cart.clear();
+
 			} else {
 				System.out.println("You are not authenticated, please authenticate before buying.");
 			}
@@ -327,6 +331,14 @@ import java.util.*;
 		 */
 		public void withdrawWine(Wine wine, int quantity){
 			wine.subtractQuantity(quantity);
+		}
+
+		public void ship(Order order){
+			for(Wine wine_toShip : order.getWines()){
+				for(Wine wine_inStock : wines){
+					wine_inStock.subtractQuantity(wine_toShip.getQuantity());
+				}
+			}
 		}
     }
 
