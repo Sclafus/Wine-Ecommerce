@@ -232,6 +232,7 @@ import java.util.*;
 		 * If the quantity in the cart is greater than the one in stock,
 		 * the customer will be automatically added to the notification 
 		 * squad for the wine in question.
+		 * @see Wine
 		 */
 		public void buy(){
 
