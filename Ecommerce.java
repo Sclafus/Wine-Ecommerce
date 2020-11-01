@@ -197,12 +197,12 @@ import java.util.*;
 				if (wine.getQuantity() < quantity){
 
 					System.out.println(new StringBuilder("The selected quantity of ").append(wine.getName())
-					.append("is currently unavailable. You will be notified when it will come back in stock!"));
+					.append(" is currently unavailable. You will be notified when it will come back in stock!"));
 					wine.addToNotifications(this);
 
 				} else {
 
-					System.out.format("added %s (%d units) to cart!", wine.getName(), quantity);
+					System.out.format("Added %s (%d units) to cart!\n", wine.getName(), quantity);
 					this.cart.add(wine_tmp);
 
 				}
@@ -333,10 +333,24 @@ import java.util.*;
 			wine.subtractQuantity(quantity);
 		}
 
+		/**
+		 * Ships all the Wines in the specified {@code Order}.
+		 * WARNING! If the 
+		 * @param order
+		 * @see Order
+		 * @see Wine
+		 */
 		public void ship(Order order){
 			for(Wine wine_toShip : order.getWines()){
 				for(Wine wine_inStock : wines){
-					wine_inStock.subtractQuantity(wine_toShip.getQuantity());
+
+					if(wine_toShip.getName() == wine_inStock.getName()){
+						if (wine_inStock.getQuantity() < wine_toShip.getQuantity()){
+							System.out.format("There is not enough %s! Contact the customer.", wine_toShip.getName());
+						} else {
+							wine_inStock.subtractQuantity(wine_toShip.getQuantity());
+						}
+					}
 				}
 			}
 		}
@@ -598,17 +612,13 @@ import java.util.*;
 		ecc.register_customer("Mario", "Verdi", "mario.verdi@gmail.com");
 		ecc.register_customer("Giovanni", "Venti", "gio20@gmail.com");
 		ecc.register_customer("Francesco", "Franceschini", "francifrance99@hotmail.com");
-		
 		ecc.register_employee("Massimiliano", "De Santis", "maxdesa@libero.it");
+
 		Employee emp = ecc.employees.get(0);
 		
 		String[] grapes = {"grape1", "grape2"};
-
-		emp.addWine("Soave Doc", "Vivaldi", 2019, 
-		"Bianco, profumo floreale", 456, grapes);
-
-		emp.addWine("Chianti", "Carpineto", 2015, 
-		"Rosso", 6, grapes);
+		emp.addWine("Soave Doc", "Vivaldi", 2019, "Bianco, profumo floreale", 456, grapes);
+		emp.addWine("Chianti", "Carpineto", 2015, "Rosso", 6, grapes);
 
 		Customer cust0 = ecc.customers.get(0);
 		auth(cust0, "mario.verdi@gmail.com");
@@ -617,14 +627,14 @@ import java.util.*;
 		
 		Customer cust1 = ecc.customers.get(1);
 		auth(cust1, "gio20@gmail.com");
-		cust0.addToCart(ecc.wines.get(1), 6);
-		cust0.buy();
+		
+		cust1.addToCart(ecc.wines.get(1), 6);
+		cust1.buy();
 
-		// //TODO: notification system
-		Customer cust2 = ecc.customers.get(1);
+		Customer cust2 = ecc.customers.get(2);
 		auth(cust2, "francifrance99@hotmail.com");
-		cust0.addToCart(ecc.wines.get(1), 18);
-		cust0.buy();
+		cust2.addToCart(ecc.wines.get(1), 18);
+		cust2.buy();
 
 		emp.restockWine(ecc.wines.get(1), 500);
 	}
