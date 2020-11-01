@@ -359,6 +359,7 @@ import java.util.*;
 	/**
 	 * The {@code Order} class is pretty straight forward. Every order has
 	 * a list of wines that has an ArrayList of wines and a unique id.
+	 * @see Wine
 	 */
 	public static class Order {
 
@@ -404,9 +405,13 @@ import java.util.*;
 		}
 	}
 
-	//TODO: class javadoc 
 	/**
-	 * 
+	 * Abstraction of a determined Wine. Every wine has a name, 
+	 * a producer, the year of production, some notes that may be useful
+	 * for the customers, the list of grapes used, the quantity
+	 * and a list of customers subscribed for notifications upon
+	 * restock.
+	 * @see Customer
 	 */
 	public class Wine {
 
@@ -627,7 +632,7 @@ import java.util.*;
 		
 		Customer cust1 = ecc.customers.get(1);
 		auth(cust1, "gio20@gmail.com");
-		
+
 		cust1.addToCart(ecc.wines.get(1), 6);
 		cust1.buy();
 
