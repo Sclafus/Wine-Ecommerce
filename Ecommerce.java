@@ -188,13 +188,23 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public void addToCart(Wine wine, int quantity){
+
 			if(quantity > 0){
+
 				Wine wine_tmp = new Wine(wine.getName(),
 				wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
+
 				if (wine.getQuantity() < quantity){
-					System.out.println("Warning - The selected quantity is unavailable");
+
+					System.out.println(new StringBuilder("The selected quantity of ").append(wine.getName())
+					.append("is currently unavailable. You will be notified when it will come back in stock!"));
+
+				} else {
+
+					System.out.format("added %s (%d units) to cart!", wine.getName(), quantity);
+					this.cart.add(wine_tmp);
+
 				}
-				this.cart.add(wine_tmp);
 			}
 		}
 
@@ -379,6 +389,7 @@ import java.util.*;
 		private String notes;
 		private ArrayList<String> grapewines = new ArrayList<String>();
 		private int quantity;
+		private ArrayList<Customer> notification_customers = new ArrayList<Customer>();
 
 		/**
 		 * {@code Wine} class constructor.
@@ -459,6 +470,17 @@ import java.util.*;
 			String[] grapes = new String[grapewines.size()];
 			grapes = grapewines.toArray(grapes);
 			return grapes;
+		}
+
+		/**
+		 * Gets the list of Customers subscribed with notifications for the {@code Wine}.
+		 * @return the list of Customers for the {@code Wine}. [Customer Array]
+		 * @see Customer
+		 */
+		public Customer[] getNotificationCustomers(){
+			Customer[] notification_customers_arr = new Customer[notification_customers.size()];
+			notification_customers_arr = notification_customers.toArray(notification_customers_arr);
+			return notification_customers_arr;
 		}
 
 		/**
