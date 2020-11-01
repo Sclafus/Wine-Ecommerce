@@ -198,6 +198,7 @@ import java.util.*;
 
 					System.out.println(new StringBuilder("The selected quantity of ").append(wine.getName())
 					.append("is currently unavailable. You will be notified when it will come back in stock!"));
+					wine.addToNotifications(this);
 
 				} else {
 
@@ -483,12 +484,23 @@ import java.util.*;
 			return notification_customers_arr;
 		}
 
+		public void addToNotifications(Customer customer){
+			notification_customers.add(customer);
+		}
+
 		/**
 		 * Adds the specified quantity to the selected {@code Wine}.
+		 * Also checks if some customers have to be notified by the restock.
 		 * @param quantity the quantity to add. [int]
 		 */
 		public void addQuantity(int quantity){
 			this.quantity += quantity;
+			for (Customer customer : notification_customers){
+				System.out.println(new StringBuilder("Hey ")
+				.append(customer.getName()).append(", ").append(this.name)
+				.append(" has been restocked with ").append(quantity)
+				.append(" bottles! If you are still interested, you may consider to buy it!\n"));
+			}
 		}
 
 		/**	
