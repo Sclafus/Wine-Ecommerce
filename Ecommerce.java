@@ -3,6 +3,7 @@ Alessandro Sclafani 298779 &
 Martina Caffagnini 294520 for 
 Ingegneria del Software*/
 import java.util.*;
+
 /**
  * The {@code Ecommerce} class is a container class. It contains:
  * <ul>
@@ -27,7 +28,6 @@ import java.util.*;
  * @see Customer
  */
 
- //? customers and wines should be an hash table instead?
  public class Ecommerce {
 
 	protected List<Customer> customers = new ArrayList<Customer>();
@@ -35,7 +35,7 @@ import java.util.*;
 	protected List<Wine> wines = new ArrayList<Wine>();
 	protected List<Order> ordersToBeProcessed = new ArrayList<Order>();
 
-	//? class People should become an abstract class?
+	//TODO: class People should become an abstract class?
     /**
 	 * Class {@code People} is a class that should never be instantiated.
 	 * This class is used as a container for Class {@code Customer} and
@@ -77,7 +77,6 @@ import java.util.*;
 
     }
 	
-	//? cart and orders should be an hash table too?
     /**
 	 * {@code Customer} is a class that rappresents a generic Customer of the shop.
 	 * It is a subclass of {@code People} and it is extended by the class {@code Employee}.
