@@ -2,6 +2,7 @@
 Alessandro Sclafani 298779 & 
 Martina Caffagnini 294520 for 
 Ingegneria del Software*/
+
 import java.util.*;
 
 /**
@@ -28,6 +29,8 @@ import java.util.*;
  * @see Customer
  */
 
+ //TODO: Map al posto di list dove serve
+ 
  public class Ecommerce {
 
 	protected List<Customer> customers = new ArrayList<Customer>();
@@ -35,7 +38,6 @@ import java.util.*;
 	protected List<Wine> wines = new ArrayList<Wine>();
 	protected List<Order> ordersToBeProcessed = new ArrayList<Order>();
 
-	//TODO: class People should become an abstract class?
     /**
 	 * Class {@code People} is a class that should never be instantiated.
 	 * This class is used as a container for Class {@code Customer} and
@@ -43,7 +45,7 @@ import java.util.*;
 	 * @see Customer
 	 * @see Employee
 	 */
-    public class People {
+    public abstract class People {
 		
 		protected String name;
 		protected String surname;
@@ -88,7 +90,7 @@ import java.util.*;
 	public class Customer extends People {
 		protected ArrayList<Wine> cart = new ArrayList<Wine>();
 		protected ArrayList<Order> orders = new ArrayList<Order>();
-		
+		protected Queue<String> pending_notifications = new LinkedList<String>();
 		
 		/**
 		 * {@code Customer} class constructor. Customer is an extension of class {@code People}.
@@ -190,8 +192,7 @@ import java.util.*;
 
 			if(quantity > 0){
 
-				Wine wine_tmp = new Wine(wine.getName(),
-				wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
+				
 
 				if (wine.getQuantity() < quantity){
 
@@ -200,6 +201,9 @@ import java.util.*;
 					wine.addToNotifications(this);
 
 				} else {
+
+					Wine wine_tmp = new Wine(wine.getName(),
+					wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
 
 					System.out.format("Added %s (%d units) to cart!\n", wine.getName(), quantity);
 					this.cart.add(wine_tmp);
@@ -264,6 +268,15 @@ import java.util.*;
 			} else {
 				System.out.println("You are not authenticated, please authenticate before buying.");
 			}
+		}
+
+		//TODO: javadoc
+		public void queueNotification(String str){
+			this.pending_notifications.add(str);
+		}
+
+		public String dequeueNotification(){
+			return this.pending_notifications.remove();
 		}
     }
 
@@ -532,11 +545,15 @@ import java.util.*;
 		 */
 		public void addQuantity(int quantity){
 			this.quantity += quantity;
+			String notification = this.name.concat(" has been restocked.")
+			.concat("If you are still interested, you may consider to buy it!\n");
+
 			for (Customer customer : notification_customers){
-				System.out.println(new StringBuilder("Hey ")
-				.append(customer.getName()).append(", ").append(this.name)
-				.append(" has been restocked with ").append(quantity)
-				.append(" bottles! If you are still interested, you may consider to buy it!\n"));
+				if(customer.isAuth()){
+					System.out.println(notification);
+				} else {
+					customer.queueNotification(notification);
+				}
 			}
 		}
 
@@ -610,7 +627,9 @@ import java.util.*;
 		} else {
 			System.out.println("The provided email is invalid.");
 		}
-
+		while(!cust.pending_notifications.isEmpty()){
+			System.out.println(cust.dequeueNotification());
+		}
 	}
 
 	public static void main(String argv[]) {
@@ -627,9 +646,9 @@ import java.util.*;
 
 		Employee emp = ecc.employees.get(0);
 		
-		String[] grapes = {"grape1", "grape2"};
-		emp.addWine("Soave Doc", "Vivaldi", 2019, "Bianco, profumo floreale", 456, grapes);
-		emp.addWine("Chianti", "Carpineto", 2015, "Rosso", 6, grapes);
+		String[] grapes = {"Uve Garganega e Trebbiano", "Sangiovese"};
+		emp.addWine("Soave Doc", "Vivaldi", 2019, "Il Soave DOCG Superiore, un vino approcciabile, fruttato, pronto, sapido e di medio corpo, ottimo per esaltare piatti di pesce, pasta al pesto e antipasti di mare.", 456, grapes);
+		emp.addWine("Chianti", "Carpineto", 2018, "Il vino Chianti Classico DOCG ha colore rubino brillante, tendente al granato e odore profondamente vinoso. Il gusto è asciutto, sapido tendente con il tempo al morbido vellutato.", 6, grapes);
 
 		Customer cust0 = ecc.customers.get(0);
 		auth(cust0, "mario.verdi@gmail.com");
@@ -646,7 +665,7 @@ import java.util.*;
 		auth(cust2, "francifrance99@hotmail.com");
 		cust2.addToCart(ecc.wines.get(1), 18);
 		cust2.buy();
-
+		
 		emp.restockWine(ecc.wines.get(1), 500);
 	}
 }
