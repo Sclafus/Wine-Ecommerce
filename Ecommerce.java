@@ -541,6 +541,11 @@ import java.util.*;
 			return notification_customers_arr;
 		}
 
+		/**
+		 * Adds the specified {@code Customer} to the notifications list.
+		 * @param customer the {@code Customer} that needs to be notified upon restock. [Customer]
+		 * @see Customer
+		 */
 		public void addToNotifications(Customer customer){
 			notification_customers.add(customer);
 		}
@@ -585,7 +590,7 @@ import java.util.*;
 			.append("\nGrapewines:"));
 
 			for (String grape : this.grapewines){
-				System.out.format("\n-%s", grape);
+				System.out.format("-%s\n", grape);
 			}
 		}
 	}
@@ -597,7 +602,7 @@ import java.util.*;
 	 * @param mail the email of the new {@code Customer}. [String]
 	 * @see Customer
 	 */
-	public void register_customer(final String name, final String surname, final String mail) {
+	public void registerCustomer(final String name, final String surname, final String mail) {
 		Customer new_cust = new Customer(name, surname, mail);
 		customers.add(new_cust);
 	}
@@ -609,7 +614,7 @@ import java.util.*;
 	 * @param mail the email of the new {@code Employee}. [String]
 	 * @see Employee
 	 */
-	public void register_employee(final String name, final String surname, final String mail) {
+	public void registerEmployee(final String name, final String surname, final String mail) {
 		Employee new_emp = new Employee(name, surname, mail);
 		customers.add(new_emp);
 		employees.add(new_emp);
@@ -646,16 +651,17 @@ import java.util.*;
 	
 	public void true_main(Ecommerce ecc){
 		
-		ecc.register_customer("Mario", "Verdi", "mario.verdi@gmail.com");
-		ecc.register_customer("Giovanni", "Venti", "gio20@gmail.com");
-		ecc.register_customer("Francesco", "Franceschini", "francifrance99@hotmail.com");
-		ecc.register_employee("Massimiliano", "De Santis", "maxdesa@libero.it");
+		ecc.registerCustomer("Mario", "Verdi", "mario.verdi@gmail.com");
+		ecc.registerCustomer("Giovanni", "Venti", "gio20@gmail.com");
+		ecc.registerCustomer("Francesco", "Franceschini", "francifrance99@hotmail.com");
+		ecc.registerEmployee("Massimiliano", "De Santis", "maxdesa@libero.it");
 
 		Employee emp = ecc.employees.get(0);
 		
-		String[] grapes = {"Uve Garganega e Trebbiano", "Sangiovese"};
-		emp.addWine("Soave Doc", "Vivaldi", 2019, "Il Soave DOCG Superiore, un vino approcciabile, fruttato, pronto, sapido e di medio corpo, ottimo per esaltare piatti di pesce, pasta al pesto e antipasti di mare.", 456, grapes);
-		emp.addWine("Chianti", "Carpineto", 2018, "Il vino Chianti Classico DOCG ha colore rubino brillante, tendente al granato e odore profondamente vinoso. Il gusto è asciutto, sapido tendente con il tempo al morbido vellutato.", 6, grapes);
+		String[] grapes1 = {"Garganega", "Trebbiano"};
+		String[] grapes2 = {"Sangiovese"};
+		emp.addWine("Soave Doc", "Vivaldi", 2019, "Il Soave DOCG Superiore, un vino approcciabile, fruttato, pronto, sapido e di medio corpo, ottimo per esaltare piatti di pesce, pasta al pesto e antipasti di mare.", 456, grapes1);
+		emp.addWine("Chianti", "Carpineto", 2018, "Il vino Chianti Classico DOCG ha colore rubino brillante, tendente al granato e odore profondamente vinoso. Il gusto è asciutto, sapido tendente con il tempo al morbido vellutato.", 6, grapes2);
 
 		Customer cust0 = ecc.customers.get(0);
 		auth(cust0, "mario.verdi@gmail.com");
@@ -670,6 +676,7 @@ import java.util.*;
 
 		Customer cust2 = ecc.customers.get(2);
 		auth(cust2, "francifrance99@hotmail.com");
+		cust2.searchByName("Soave Doc");
 		cust2.addToCart(ecc.wines.get(1), 18);
 		cust2.buy();
 		
