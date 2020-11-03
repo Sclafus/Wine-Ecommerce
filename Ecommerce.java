@@ -29,8 +29,6 @@ import java.util.*;
  * @see Customer
  */
 
- //TODO: Map al posto di list dove serve
- 
  public class Ecommerce {
 
 	protected List<Customer> customers = new ArrayList<Customer>();
@@ -233,8 +231,6 @@ import java.util.*;
 			this.authenticated = !this.authenticated;
 		}
 		
-		//TODO: also fix the javadoc language lmao notification squad
-
 		/**
 		 * Buys everything that has been added to the cart. 
 		 * If the quantity in the cart is greater than the one in stock,
