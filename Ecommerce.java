@@ -274,11 +274,18 @@ import java.util.*;
 			}
 		}
 
-		//TODO: javadoc
-		public void queueNotification(String str){
+		/**
+		 * Adds the specified String to the notification queue.
+		 * @param str The String that needs to be added to the queue.
+		 */
+		public void enqueueNotification(String str){
 			this.pending_notifications.add(str);
 		}
 
+		/**
+		 * Removes the String at the beginning of the notification queue.
+		 * @return The String removed from the beginning of the queue. 
+		 */
 		public String dequeueNotification(){
 			return this.pending_notifications.remove();
 		}
@@ -556,7 +563,7 @@ import java.util.*;
 				if(customer.isAuth()){
 					System.out.println(notification);
 				} else {
-					customer.queueNotification(notification);
+					customer.enqueueNotification(notification);
 				}
 			}
 		}
