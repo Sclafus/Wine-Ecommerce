@@ -114,7 +114,6 @@ import java.util.*;
 		/**
 		 * Gets the name of the {@code Customer}.
 		 * @return The name of the customer. [String]
-		 * @see Customer
 		 */
 		public String getName() {
 			return this.name;
@@ -123,7 +122,6 @@ import java.util.*;
 		/**
 		 * Gets the surname of the {@code Customer}.
 		 * @return The surname of the customer. [String]
-		 * @see Customer
 		 */
 		public String getSurname() {
 			return this.surname;
@@ -132,7 +130,6 @@ import java.util.*;
 		/**
 		 * Gets the email of the {@code Customer}.
 		 * @return The email of the customer. [String]
-		 * @see Customer
 		 */
 		public String getEmail() {
 			return this.email;
@@ -221,10 +218,17 @@ import java.util.*;
 			this.cart.remove(wine);
 		} 
 
+		/**
+		 * Checks if the current {@code Customer} is authenticated or not.
+		 * @return The authentication status of the {@code Customer}. [Boolean]
+		 */
 		public boolean isAuth(){
 			return this.authenticated;
 		}
 
+		/**
+		 * Toggles the authentication status of the current {@code Customer}.
+		 */
 		public void toggleAuth(){
 			this.authenticated = !this.authenticated;
 		}
@@ -232,10 +236,10 @@ import java.util.*;
 		//TODO: also fix the javadoc language lmao notification squad
 
 		/**
-		 * Buys everything that has been added from the cart. 
+		 * Buys everything that has been added to the cart. 
 		 * If the quantity in the cart is greater than the one in stock,
 		 * the customer will be automatically added to the notification 
-		 * squad for the wine in question.
+		 * list for the wine in question.
 		 * @see Wine
 		 */
 		public void buy(){
