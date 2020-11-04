@@ -626,6 +626,7 @@ import java.util.*;
 	 * the email of the customer. This is really bad for security
 	 * reasons, but since we don't have a password field, this is the
 	 * only workaround we can use. 
+	 * Also, it sends the pending notifications to the customer.
 	 * @param cust the customer we want to authenticate. [Customer]
 	 * @param email the email of the customer we want to check. [String]
 	 * @see Customer
