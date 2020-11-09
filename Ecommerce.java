@@ -677,7 +677,7 @@ import java.util.*;
 
 		Customer cust2 = ecc.customers.get(2);
 		auth(cust2, "francifrance99@hotmail.com");
-		cust2.searchByName("Soave Doc");
+		
 		cust2.addToCart(ecc.wines.get(1), 18);
 		cust2.buy();
 		
