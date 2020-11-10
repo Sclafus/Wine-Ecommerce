@@ -184,26 +184,29 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public void addToCart(Wine wine, int quantity){
+			if(this.isAuth()){
 
-			if(quantity > 0){
-
-				
-
-				if (wine.getQuantity() < quantity){
-
-					System.out.println(new StringBuilder("The selected quantity of ").append(wine.getName())
-					.append(" is currently unavailable. You will be notified when it will come back in stock!"));
-					wine.addToNotifications(this);
-
-				} else {
-
-					Wine wine_tmp = new Wine(wine.getName(),
-					wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
-
-					System.out.format("Added %s (%d units) to cart!\n", wine.getName(), quantity);
-					this.cart.add(wine_tmp);
-
+				if(quantity > 0){
+					if (wine.getQuantity() < quantity){
+	
+						System.out.println(new StringBuilder("The selected quantity of ").append(wine.getName())
+						.append(" is currently unavailable. You will be notified when it will come back in stock!"));
+						wine.addToNotifications(this);
+	
+					} else {
+	
+						Wine wine_tmp = new Wine(wine.getName(),
+						wine.getProducer(), wine.getYear(), wine.getNotes(), quantity, wine.getGrapewines());
+	
+						System.out.format("Added %s (%d units) to cart!\n", wine.getName(), quantity);
+						this.cart.add(wine_tmp);
+	
+					}
+				} else{
+					System.out.println("The specified quantity is not valid.");
 				}
+			} else {
+				System.out.println("You are not authenticated.");
 			}
 		}
 
@@ -329,8 +332,13 @@ import java.util.*;
 		 */
 		public void addWine(final String name, final String producer, final int year,
 		final String notes, final int quantity, final String[] grapes){
-			Wine wine = new Wine(name, producer, year, notes, quantity, grapes);
-			wines.add(wine);
+
+			if(this.isAuth()){
+				Wine wine = new Wine(name, producer, year, notes, quantity, grapes);
+				wines.add(wine);
+			} else {
+				System.out.println("You are not authenticated.");
+			}
 		}
 
 		/**
@@ -340,7 +348,11 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public void restockWine(Wine wine, int quantity){
-			wine.addQuantity(quantity);
+			if(this.isAuth()){
+				wine.addQuantity(quantity);
+			} else{
+				System.out.println("You are not authenticated.");
+			}
 		}
 
 		/**
@@ -350,7 +362,11 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public void withdrawWine(Wine wine, int quantity){
-			wine.subtractQuantity(quantity);
+			if(this.isAuth()){
+				wine.subtractQuantity(quantity);
+			} else{
+				System.out.println("You are not authenticated.");
+			}
 		}
 
 		/**
@@ -362,22 +378,26 @@ import java.util.*;
 		 * @see Wine
 		 */
 		public void ship(Order order){
-			int counter = 0;
-			for(Wine wine_toShip : order.getWines()){
-				for(Wine wine_inStock : wines){
-
-					if(wine_toShip.getName() == wine_inStock.getName()){
-						if (wine_inStock.getQuantity() < wine_toShip.getQuantity()){
-							System.out.format("There is not enough %s! Contact the customer.", wine_toShip.getName());
-						} else {
-							wine_inStock.subtractQuantity(wine_toShip.getQuantity());
-							counter++;
+			if(this.isAuth()){
+				int counter = 0;
+				for(Wine wine_toShip : order.getWines()){
+					for(Wine wine_inStock : wines){
+	
+						if(wine_toShip.getName() == wine_inStock.getName()){
+							if (wine_inStock.getQuantity() < wine_toShip.getQuantity()){
+								System.out.format("There is not enough %s! Contact the customer.", wine_toShip.getName());
+							} else {
+								wine_inStock.subtractQuantity(wine_toShip.getQuantity());
+								counter++;
+							}
 						}
 					}
 				}
-			}
-			if (counter == order.getWines().length){
-				ordersToBeProcessed.remove(order);
+				if (counter == order.getWines().length){
+					ordersToBeProcessed.remove(order);
+				}
+			} else {
+			System.out.println("You are not authenticated.");
 			}
 		}
     }
@@ -658,6 +678,7 @@ import java.util.*;
 		ecc.registerEmployee("Massimiliano", "De Santis", "maxdesa@libero.it");
 
 		Employee emp = ecc.employees.get(0);
+		auth(emp, "maxdesa@libero.it");
 		
 		String[] grapes1 = {"Garganega", "Trebbiano"};
 		String[] grapes2 = {"Sangiovese"};
